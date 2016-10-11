@@ -232,7 +232,7 @@ public class BM25FSimilarity extends Similarity {
 
         BM25DocScorer(BM25Stats stats, NumericDocValues norms) throws IOException {
             this.stats = stats;
-            this.weightValue = stats.weight * (k1 + 1);
+            this.weightValue = stats.weight * (k1 + 1) * stats.boost;
             this.cache = stats.cache;
             this.norms = norms;
         }
@@ -292,8 +292,7 @@ public class BM25FSimilarity extends Similarity {
         @Override
         public void normalize(float queryNorm, float boost) {
             // we don't normalize with queryNorm at all, we just capture the top-level boost
-            this.boost = boost;
-            this.weight = idf.getValue() * boost;
+            this.weight = idf.getValue();
         }
     }
 
@@ -337,7 +336,7 @@ public class BM25FSimilarity extends Similarity {
 
     /**
      * Returns the <code>k1</code> parameter
-     * @see #BM25Similarity(float, float)
+     * @see #BM25FSimilarity(float, float)
      */
     public final float getK1() {
         return k1;
@@ -345,7 +344,7 @@ public class BM25FSimilarity extends Similarity {
 
     /**
      * Returns the <code>b</code> parameter
-     * @see #BM25Similarity(float, float)
+     * @see #BM25FSimilarity(float, float)
      */
     public final float getB() {
         return b;
